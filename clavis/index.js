@@ -84,6 +84,39 @@ clavisRouter.put('/push-passwords', (req, res, next) => {
 	})
 })
 
+clavisRouter.put('/deleteContent/', (req, res) => {
+	const {id, title} = req.body;
+
+	// savedPasswords.fineOneAndDelete({_id: id}, {"$pull": {"passwords.title": title}}, (err, doc) => {
+	// 	if (err) {
+	// 		res.json('unable to delete content');
+	// 		return;
+	// 	}
+	// 	res.json({updatedPasswords: doc});
+	// });
+
+	savedPasswords.findById(id, async (err, doc) => {
+		if (err) {
+			res.json('unable to delete content');
+			return;
+		}
+		let temp = [...doc.passwords];
+
+		for (let i = 0; i < temp.length; i++) 
+		{
+			if (temp[i].title === title) 
+			{
+				doc.passwords.splice(i, 1);
+				break;
+			}
+		}
+
+		doc = await doc.save();
+		
+		res.json({updatedPasswords: doc});
+	})
+})
+
 clavisRouter.get('/pull-passwords/:id', (req, res, next) => {
     const {id} = req.params;
 
