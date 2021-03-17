@@ -11,12 +11,12 @@ egateRouter.post('/egate-login', (req, res) => {
 
 	attendance_users.findOne({userID: userID}, (err, doc) => {
 		if (err) {
-			res.json(`User doesn't exist`);
+			res.status(404).json(`User doesn't exist`);
 			return;
 		}
-		if (doc.password === password) 
+		if (doc.password === password)
 			res.json({userID: doc.userID, username: doc.username});
-		else 
+		else
 			res.json('Invalid username or password');
 	})
 
@@ -26,7 +26,8 @@ egateRouter.put('/checkin', (req, res) => {
 	const {date, userID, time} = req.body;
 
 	dates.findOne({date: date}, (err, doc) => {
-		if (err) {
+		if (err || !doc) {
+			console.log("SIRIUS BLACK")
 			let newDate = new dates({
 				date: date,
 				checkin: [{
@@ -44,12 +45,13 @@ egateRouter.put('/checkin', (req, res) => {
 				res.json({checkedIn: true});
 				return;
 			});
+			return;
 		}
-
-		doc.checkIn.push({
-			userID: userID,
-			time: time
-		});
+		console.log("VOLDEMORT", doc)
+		// doc.checkIn.push({
+		// 	userID: userID,
+		// 	time: time
+		// });
 
 		doc.save((err, newDoc) => {
 			if (err) {
@@ -66,7 +68,7 @@ egateRouter.put('/checkout', (req, res) => {
 	const {date, userID, time} = req.body;
 
 	dates.findOne({date: date}, (err, doc) => {
-		if (err) {
+		if (err || !doc) {
 			let newDate = new dates({
 				date: date,
 				checkout: [{
@@ -84,6 +86,7 @@ egateRouter.put('/checkout', (req, res) => {
 				res.json({checkedout: true});
 				return;
 			});
+			return;
 		}
 
 		doc.checkout.push({
