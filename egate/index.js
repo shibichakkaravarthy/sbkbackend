@@ -1,10 +1,11 @@
 const egateRouter = require('express').Router();
 const mongoose = require('mongoose');
 
-const {attendance_user, date} = require('./model.js');
+const {attendance_user, date, tpeSchema} = require('./model.js');
 
 const attendance_users = mongoose.model('attendance_users', attendance_user);
 const dates = mongoose.model('dates', date);
+const tpeModel = mongoose.model('tpe', tpeSchema);
 
 egateRouter.post('/egate-login', (req, res) => {
 	const {userID, password} = req.body;
@@ -103,6 +104,16 @@ egateRouter.put('/checkout', (req, res) => {
 			return;
 		});
 	})
+})
+
+egateRouter.post('/tpe', async (req, res, next) => {
+	try {
+		await tpeModel.create({...res.body})
+		res.status(200).json({message: "SUCCESS"})
+	}
+	catch(err) {
+		res.status(500).json({message: "ERROR", err})
+	}
 })
 
 egateRouter.post('/push', (req, res, next) => {

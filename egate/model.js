@@ -19,7 +19,15 @@ const date = new mongoose.Schema({
 	}]
 });
 
+const tpeSchema = new mongoose.Schema({
+	name: String,
+	personToSee: String,
+	reason: String,
+	time: String
+})
+
 module.exports = {
 	attendance_user: attendance_user,
-	date: date
+	date: date,
+	tpeSchema
 };
