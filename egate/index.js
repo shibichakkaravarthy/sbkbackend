@@ -108,7 +108,7 @@ egateRouter.put('/checkout', (req, res) => {
 
 egateRouter.post('/tpe', async (req, res, next) => {
 	try {
-		await tpeModel.create({...res.body})
+		await tpeModel.create({...req.body})
 		res.status(200).json({message: "SUCCESS"})
 	}
 	catch(err) {
